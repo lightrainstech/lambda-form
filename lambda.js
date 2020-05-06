@@ -2,15 +2,21 @@ var AWS = require('aws-sdk')
 const { uuid } = require('uuidv4')
 var ses = new AWS.SES()
 
+// configure aws with credentials
+
 AWS.config.update({
     accessKeyId: '',
     secretAccessKey: '',
     region: 'us-east-1'
 })
+
+// initialise dynamodb object
 const dbObject = new AWS.DynamoDB.DocumentClient()
 
-var RECEIVER = 'user@example.com'
+// email receiver
+const RECEIVER = 'user@example.com'
 
+// Lambda handler
 exports.handler = function(event, context) {
     let response = {}
     try {
@@ -49,6 +55,7 @@ async function sendEmail(event, context) {
     ses.sendEmail(params, function(err, data) {
         if (err) console.log('error', err)
         else {
+            // build email send parameters
             const details = {
                 id: uuid(),
                 sender: event.email,
@@ -69,6 +76,7 @@ async function sendEmail(event, context) {
 
 async function saveDetails(data) {
     try {
+        // saving to dynamodb
         const params = {
             TableName: 'contactForm',
             Item: {
