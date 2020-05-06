@@ -33,15 +33,19 @@
                         <form id="news-letter" method="post" class="ui form">
                             <div class="field">
                                 <input
-                                    type="text"
+                                    type="email"
                                     id="newsemail"
                                     placeholder="Email"
                                     class="form-control"
+                                    required="true"
                                 />
+                            </div>
 
-                                <button type="submit" class="ui button basic">
+                            <div class="field">
+                                <button type="submit" class="ui button green">
                                     Submit
                                 </button>
+                                <div id="target1"></div>
                             </div>
                         </form>
                     </div>
@@ -131,6 +135,7 @@
                                 id="email"
                                 placeholder="Email"
                                 class="form-control"
+                                required="true"
                             />
                         </div>
                         <div class="field">
@@ -158,6 +163,7 @@
                             ></textarea>
                         </div>
                         <div class="field">
+                            <label for="">Captcha</label>
                             <input
                                 class="jCaptcha"
                                 type="text"
@@ -179,6 +185,9 @@
     <script type="text/javascript">
         jQuery(document).ready(function($) {
             var myCaptcha = new jCaptcha({
+                canvasFontSize: '20px',
+                canvasFillStyle: '#00000',
+                canvasHeight: '25',
                 callback: (response, $captchaInputElement) => {
                     if (response == 'success') {
                         let posting = {
@@ -211,6 +220,27 @@
             $('#contact-form').submit(function(event) {
                 event.preventDefault()
                 myCaptcha.validate()
+            })
+
+            $('#news-letter').submit(function(event) {
+                event.preventDefault()
+
+                let posting = {
+                    email: $('#newsemail').val()
+                }
+
+                $.ajax({
+                    url:
+                        'https://4925tq8js2.execute-api.ap-south-1.amazonaws.com/prod/newsletter',
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function(data) {
+                        $('#target1').html(data.message)
+                    },
+                    data: JSON.stringify(posting)
+                })
+                $('#news-letter')[0].reset()
             })
         })
     </script>
