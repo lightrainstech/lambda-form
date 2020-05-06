@@ -13,6 +13,11 @@
         />
         <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
         <script src="./captcha.min.js"></script>
+        <style>
+            #target {
+                color: green;
+            }
+        </style>
     </head>
     <body>
         <div class="ui container">
@@ -152,16 +157,20 @@
                                 class="form-control"
                             ></textarea>
                         </div>
-                        <input
-                            class="jCaptcha"
-                            type="text"
-                            placeholder="Type in result please"
-                        />
-                        <button type="submit" class="ui button primary">
-                            Send Message
-                        </button>
-                        <div id="target"></div>
+                        <div class="field">
+                            <input
+                                class="jCaptcha"
+                                type="text"
+                                placeholder="Type in result please"
+                            />
+                        </div>
+                        <div class="field">
+                            <button type="submit" class="ui button primary">
+                                Send Message
+                            </button>
+                        </div>
                     </form>
+                    <div id="target"></div>
                 </div>
             </div>
         </div>
