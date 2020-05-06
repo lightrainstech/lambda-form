@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>AWS Lambda contact form</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+            integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q="
+            crossorigin="anonymous"
+        />
+        <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="./captcha.min.js"></script>
+    </head>
+    <body>
+        <div class="ui container">
+            <div class="ui divider hidden"></div>
+            <div class="ui divider hidden"></div>
+            <div class="ui divider hidden"></div>
+            <div class="ui divider hidden"></div>
+            <div class="ui grid">
+                <div class="three wide column">
+                    <h2>X-test Cloud</h2>
+                    <div>
+                        <h2>Our Newsletter</h2>
+                        <form id="news-letter" method="post" class="ui form">
+                            <div class="field">
+                                <input
+                                    type="text"
+                                    id="newsemail"
+                                    placeholder="Email"
+                                    class="form-control"
+                                />
+
+                                <button type="submit" class="ui button basic">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <h2>Useful Links</h2>
+                    <ul>
+                        <li>
+                            <a
+                                href="url"
+                                target="_self"
+                                style="text-decoration: none;"
+                                >What We Do</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="url"
+                                target="_self"
+                                style="text-decoration: none;"
+                                >Why Choose Us</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="url"
+                                target="_self"
+                                style="text-decoration: none;"
+                                >Business Continuity</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="url"
+                                target="_self"
+                                style="text-decoration: none;"
+                                >Pricing</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="url"
+                                target="_self"
+                                style="text-decoration: none;"
+                                >Careers</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="url"
+                                target="_self"
+                                style="text-decoration: none;"
+                                >Terms of service</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="url"
+                                target="_self"
+                                style="text-decoration: none;"
+                                >Privacy policy</a
+                            >
+                        </li>
+                    </ul>
+                    <div>
+                        <h2>Contact Us</h2>
+                        <p>
+                            Dogwards <br />phone:+77(20)86397984
+                            <br />Email:info@x-testcloud.co.zk
+                        </p>
+                    </div>
+                </div>
+                <div class="six wide column">
+                    <form id="contact-form" method="post" class="ui form">
+                        <h2>Send us a message</h2>
+                        <div class="field">
+                            <input
+                                type="text"
+                                id="name"
+                                placeholder="Name"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="field">
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="Email"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="field">
+                            <input
+                                type="text"
+                                id="contactNumber"
+                                placeholder="Contact Number"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="field">
+                            <input
+                                type="text"
+                                id="subject"
+                                placeholder="Subject"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="field">
+                            <textarea
+                                id="message"
+                                rows="10"
+                                placeholder="Message"
+                                class="form-control"
+                            ></textarea>
+                        </div>
+                        <input
+                            class="jCaptcha"
+                            type="text"
+                            placeholder="Type in result please"
+                        />
+                        <button type="submit" class="ui button primary">
+                            Send Message
+                        </button>
+                        <div id="target"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            var myCaptcha = new jCaptcha({
+                callback: (response, $captchaInputElement) => {
+                    if (response == 'success') {
+                        let posting = {
+                            name: $('#name').val(),
+                            email: $('#email').val(),
+                            contactNumber: $('#contactNumber').val(),
+                            subject: $('#subject').val(),
+                            message: $('#message').val()
+                        }
+
+                        $.ajax({
+                            url:
+                                'https://4925tq8js2.execute-api.ap-south-1.amazonaws.com/prod/sendemail',
+                            type: 'post',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function(data) {
+                                $('#target').html(data.message)
+                            },
+                            data: JSON.stringify(posting)
+                        })
+                        $('#contact-form')[0].reset()
+                    }
+                    if (response == 'error') {
+                        $('#target').html('Captcha failed')
+                    }
+                }
+            })
+
+            $('#contact-form').submit(function(event) {
+                event.preventDefault()
+                myCaptcha.validate()
+            })
+        })
+    </script>
+
+    <script></script>
+</html>
