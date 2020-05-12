@@ -1,5 +1,4 @@
 var AWS = require('aws-sdk')
-const { uuid } = require('uuidv4')
 var ses = new AWS.SES()
 
 // configure aws with credentials
@@ -57,7 +56,7 @@ async function sendEmail(event, context) {
             // build email send parameters
 
             const details = {
-                id: uuid(),
+                id: Math.floor(Date.now() / 1000),
                 email: event.email
             }
 
